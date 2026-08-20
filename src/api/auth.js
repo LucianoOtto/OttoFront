@@ -1,9 +1,16 @@
-import request from "./client";
+import client from "./client";
 
-export function login(email, password) {
-  return request("/auth/login", { method: "POST", body: { email, password } });
+export async function login(email, password) {
+  // Axios convierte automáticamente { email, password } a JSON
+  const response = await client.post("/auth/login", { email, password });
+  return response.data;
 }
 
-export function me(token) {
-  return request("/auth/me", { token });
+export async function me(token) {
+  const response = await client.get("/auth/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 }
