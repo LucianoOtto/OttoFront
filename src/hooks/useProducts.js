@@ -11,8 +11,16 @@ export default function useProducts(filters = {}) {
     setLoading(true);
     setError(null);
     return getProducts({ category, search })
-      .then(setProducts)
-      .catch((err) => setError(err.message))
+      .then((res) => {
+        const list = Array.isArray(res) 
+          ? res 
+          : res?.products || res?.data || [];
+        setProducts(list);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setProducts([]);
+      })
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, search]);

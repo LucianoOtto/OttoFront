@@ -10,8 +10,16 @@ export default function useSections() {
     setLoading(true);
     setError(null);
     return getSections()
-      .then(setSections)
-      .catch((err) => setError(err.message))
+      .then((res) => {
+        const list = Array.isArray(res) 
+          ? res 
+          : res?.sections || res?.data || [];
+        setSections(list);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setSections([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 

@@ -10,8 +10,17 @@ export default function useCategories() {
     setLoading(true);
     setError(null);
     return getCategories()
-      .then(setCategories)
-      .catch((err) => setError(err.message))
+      .then((res) => {
+        // Extrae el array sin importar la envoltura que devuelva Express
+        const list = Array.isArray(res) 
+          ? res 
+          : res?.categories || res?.data || [];
+        setCategories(list);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setCategories([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
