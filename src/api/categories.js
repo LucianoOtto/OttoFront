@@ -1,22 +1,21 @@
-import request from "./client";
-import { useAuthStore } from "../store/authStore";
+import client from './client';
 
-function token() {
-  return useAuthStore.getState().token;
-}
+export const getCategories = async () => {
+  const response = await client.get('/categories');
+  return response.data;
+};
 
-export function getCategories() {
-  return request("/categories");
-}
+export const createCategory = async (categoryData) => {
+  const response = await client.post('/categories', categoryData);
+  return response.data;
+};
 
-export function createCategory(data) {
-  return request("/categories", { method: "POST", body: data, token: token() });
-}
+export const updateCategory = async (id, categoryData) => {
+  const response = await client.put(`/categories/${id}`, categoryData);
+  return response.data;
+};
 
-export function updateCategory(id, data) {
-  return request(`/categories/${id}`, { method: "PUT", body: data, token: token() });
-}
-
-export function deleteCategory(id) {
-  return request(`/categories/${id}`, { method: "DELETE", token: token() });
-}
+export const deleteCategory = async (id) => {
+  const response = await client.delete(`/categories/${id}`);
+  return response.data;
+};
