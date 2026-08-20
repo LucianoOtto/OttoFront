@@ -10,26 +10,22 @@ const client = axios.create({
 // Interceptor para inyectar automáticamente el Bearer Token en cada Request
 client.interceptors.request.use(
   (config) => {
-    let token = null;
+    let token = localStorage.getItem('token');
 
-    // 1. Intentar leer token directo
-    token = localStorage.getItem('token');
-
-    // 2. Si no existe, buscarlo dentro de la persistencia de Zustand (auth-storage)
+    // Buscar en la clave correcta configurada en Zustand: "admin-auth"
     if (!token) {
-      const authStorage = localStorage.getItem('auth-storage');
-      if (authStorage) {
+      const adminAuth = localStorage.getItem('admin-auth');
+      if (adminAuth) {
         try {
-          const parsed = JSON.parse(authStorage);
-          // Extrae el token según la estructura de Zustand
-          token = parsed.state?.token || parsed.state?.user?.token;
+          const parsed = JSON.parse(adminAuth);
+          token = parsed.state?.token;
         } catch (err) {
-          console.error('Error al parsear auth-storage de Zustand:', err);
+          console.error('Error al parsear admin-auth de Zustand:', err);
         }
       }
     }
 
-    // 3. Adjuntar token al header Authorization si existe
+    // Adjuntar token al header Authorization si existe
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
