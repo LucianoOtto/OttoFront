@@ -1,21 +1,22 @@
-import client from './client';
+import client from "./client"; 
 
-export const getCategories = async () => {
-  const response = await client.get('/categories');
+export async function getCategories() {
+  const response = await client.get("/categories");
   return response.data;
-};
+}
 
-export const createCategory = async (categoryData) => {
-  const response = await client.post('/categories', categoryData);
+export async function createCategory(data) {
+  
+  const response = await client.post("/categories", data);
   return response.data;
-};
+}
 
-export const updateCategory = async (id, categoryData) => {
-  const response = await client.put(`/categories/${id}`, categoryData);
+export async function updateCategory(id, data) {
+  const response = await client.put(`/categories/${id}`, data);
   return response.data;
-};
+}
 
-export const deleteCategory = async (id) => {
+export async function deleteCategory(id) {
   const response = await client.delete(`/categories/${id}`);
   return response.data;
-};
+}
