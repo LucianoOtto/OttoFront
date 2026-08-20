@@ -1,22 +1,24 @@
-import request from "./client";
-import { useAuthStore } from "../store/authStore";
+import client from "./client";
 
-function token() {
-  return useAuthStore.getState().token;
+export async function getSections() {
+  const response = await client.get("/sections");
+  return response.data;
 }
 
-export function getSections() {
-  return request("/sections");
+export async function createSection(data) {
+  // Aseguramos que la clave enviada sea siempre 'name'
+  const payload = typeof data === "string" ? { name: data } : { name: data.name || data.title || data.nombre, ...data };
+  
+  const response = await client.post("/sections", payload);
+  return response.data;
 }
 
-export function createSection(data) {
-  return request("/sections", { method: "POST", body: data, token: token() });
+export async function updateSection(id, data) {
+  const response = await client.put(`/sections/${id}`, data);
+  return response.data;
 }
 
-export function updateSection(id, data) {
-  return request(`/sections/${id}`, { method: "PUT", body: data, token: token() });
-}
-
-export function deleteSection(id) {
-  return request(`/sections/${id}`, { method: "DELETE", token: token() });
+export async function deleteSection(id) {
+  const response = await client.delete(`/sections/${id}`);
+  return response.data;
 }
